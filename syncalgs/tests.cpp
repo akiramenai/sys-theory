@@ -1,6 +1,6 @@
 #include <relacy/relacy_std.hpp>
-//#include <relacy/windows.h>
 #include "peterson_mutex.h"
+#include "dekker_mutex.h"
 
 struct peterson_mutex_test : rl::test_suite<peterson_mutex_test, 2>
 {
@@ -206,6 +206,25 @@ struct peterson_mutex_test5 : rl::test_suite<peterson_mutex_test5, 2>
     }
 };
 
+struct dekker_mutex_test : rl::test_suite<dekker_mutex_test, 2>
+{
+    dekker_mutex mutex;
+    rl::var<int> data;
+
+    void before()
+    {
+        data($) = 0;
+    }
+
+    void thread(unsigned index)
+    {
+    	mutex.lock(index);
+    	data($)++;
+    	//printf("%d thread chan")
+    	mutex.unlock(index);
+    }
+};
+
 
 int main()
 {
@@ -214,6 +233,7 @@ int main()
     rl::simulate<peterson_mutex_test>();
     rl::simulate<peterson_mutex_test2>(p);
     rl::simulate<peterson_mutex_test3>();
-    rl::simulate<peterson_mutex_test5>();
+    rl::simulate<peterson_mutex_test5>(p);
+    rl::simulate<dekker_mutex_test>(p);
     //rl::simulate<peterson_mutex_test4>(p);
 }
