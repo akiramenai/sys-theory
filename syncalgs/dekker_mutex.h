@@ -12,8 +12,7 @@
 
 struct dekker_mutex{
 private:
-	std::atomic_bool _interested0;
-	std::atomic_bool _interested1;
+	std::atomic_bool _interested[2];
 	std::atomic_int _turn;
 public:
 	dekker_mutex();
